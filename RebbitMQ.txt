@@ -1,0 +1,8 @@
+启动RebbitMQ
+sudo docker run -d --hostname my-rabbit --name some-rabbit rabbitmq
+
+启动管理插件
+
+sudo docker run -d --homename my-rabbit --name some-rabbitm rabbitmq:managment
+
+
