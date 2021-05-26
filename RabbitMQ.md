@@ -1,0 +1,1 @@
+docker run -d --hostname my-rabbit --name mq --restart=always -e RABBITMQ_DEFAULT_VHOST=my_vhost -e RABBITMQ_DEFAULT_USER=admin -e RABBITMQ_DEFAULT_PASS=Abcd1234 -p 15672:15672 -p 5672:5672 rabbitmq:management
