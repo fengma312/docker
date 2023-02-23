@@ -2,17 +2,17 @@ version: '3.4'
 
 services:
 
-  # redis:
-  #   image: redis
-  #   restart: always
-  #   container_name: redis
-  #   ports:
-  #     - 6379:6379
-  #   volumes:
-  #     - /home/docker/redis/data:/data
-  #   environment:
-  #     - requirepass=mypassword
-  #   command: [ "redis-server", "--appendonly", "yes" ]
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /home/docker/redis/data:/data
+    environment:
+      - requirepass=mypassword
+    command: [ "redis-server", "--appendonly", "yes" ]
 
   RabbitMQ:
     image: rabbitmq:management
@@ -24,6 +24,21 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=mquser
       - RABBITMQ_DEFAULT_PASS=Abcd1234
+
+  mysql:
+    image: mysql
+    restart: always
+    container_name: mysql
+    ports:
+      - 3306:3306
+    volumes:
+      - /home/docker/mysql:/var/lib/mysql
+    environment:
+      - TZ=Asia/Shanghai
+      - MYSQL_ROOT_PASSWORD=Abcd@123456
+    
+      
+
 
   # mongo:
   #   image: mongo
