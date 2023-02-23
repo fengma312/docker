@@ -1,0 +1,17 @@
+version: '3.4'
+
+services:
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /home/docker/redis/data:/data
+    environment:
+      - requirepass=mypassword
+
+    command: ["redis-server","--appendonly","yes"]
+    
+    
