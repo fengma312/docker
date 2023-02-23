@@ -1,17 +1,38 @@
 version: '3.4'
 
 services:
-  redis:
-    image: redis
-    restart: always
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - /home/docker/redis/data:/data
-    environment:
-      - requirepass=mypassword
 
-    command: ["redis-server","--appendonly","yes"]
+  # redis:
+  #   image: redis
+  #   restart: always
+  #   container_name: redis
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - /home/docker/redis/data:/data
+  #   environment:
+  #     - requirepass=mypassword
+  #   command: [ "redis-server", "--appendonly", "yes" ]
+
+  RabbitMQ:
+    image: rabbitmq:management
+    restart: always
+    container_name: mq
+    ports:
+      - 15672:15672
+      - 5672:5672
+    environment:
+      - RABBITMQ_DEFAULT_USER=mquser
+      - RABBITMQ_DEFAULT_PASS=Abcd1234
+
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   container_name: mongo
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - /home/docker/mongo:/data/db
+  #   command: ["--auth"]
     
-    
+  
