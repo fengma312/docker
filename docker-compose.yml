@@ -33,6 +33,16 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - MYSQL_ROOT_PASSWORD=Abcd@123456
+  pgsql:
+    image: postgres
+    restart: always
+    container_name: gpsql
+    ports:
+      - 5432:5432
+    volumes:
+      - ~/docker/postgresql:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=mypassword
   mongo:
     image: mongo
     restart: always
