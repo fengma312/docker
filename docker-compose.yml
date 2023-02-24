@@ -5,7 +5,7 @@ services:
     image: registry
     container_name: registry
     volumes:
-      - ~/docker/registry:/var/lib/registry
+      - ~/docker/registry/registry:/var/lib/registry
       - ~/docker/registry/auth:/auth
     environment:
       - REGISTRY_AUTH=htpasswd
@@ -15,7 +15,7 @@ services:
     privileged: true
     ports:
       - 5000:5000
-    command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/htpasswd"]
+    command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
   redis:
     image: redis
     restart: always
