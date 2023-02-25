@@ -4,7 +4,7 @@ services:
   htpasswd:
     image: xmartlabs/htpasswd
     container_name: htpasswd
-    command: ["mf abcd123456 > htpasswd"]
+    command: ["htpasswd mf abcd123456 > htpasswd"]
 
   # registry:
   #   image: registry
