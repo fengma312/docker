@@ -15,4 +15,4 @@ services:
     privileged: true
     ports:
       - 5000:5000
-    command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
+    # command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
