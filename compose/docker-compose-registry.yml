@@ -5,8 +5,8 @@ services:
     image: xmartlabs/htpasswd
     container_name: htpasswd
     volumes:
-      - ~/docker/registry/auth:/docker/registry/auth
-    command: ["mf abcd123456 > ~/docker/registry/auth/htpasswd"]
+      - ~/docker/registry/auth:/auth
+    command: ["mf abcd123456 > /auth/htpasswd"]
 
   # registry:
   #   image: registry
