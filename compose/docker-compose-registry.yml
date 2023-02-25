@@ -1,13 +1,9 @@
 version: '3.4'
 
 services:
-  # htpasswd:
-  #   image: xmartlabs/htpasswd
-  #   container_name: htpasswd
-  #   command: ["htpasswd mf abcd123456 > htpasswd"]
-# docker run --rm -ti xmartlabs/htpasswd <username> <password> > htpasswd
+ 
 
-# docker run --rm -ti xmartlabs/htpasswd mf Abcd12345678 > ~/docker/registry/auth/htpasswd
+
 
   registry:
     image: registry
@@ -23,3 +19,6 @@ services:
     privileged: true
     ports:
       - 5000:5000
+
+
+# docker run --rm -ti xmartlabs/htpasswd mf Abcd12345678 > ~/docker/registry/auth/htpasswd
