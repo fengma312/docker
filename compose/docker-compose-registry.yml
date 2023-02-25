@@ -1,22 +1,25 @@
 version: '3.4'
 
 services:
-  htpasswd:
-    image: xmartlabs/htpasswd
-    container_name: htpasswd
-    command: ["htpasswd mf abcd123456 > htpasswd"]
+  # htpasswd:
+  #   image: xmartlabs/htpasswd
+  #   container_name: htpasswd
+  #   command: ["htpasswd mf abcd123456 > htpasswd"]
+# docker run --rm -ti xmartlabs/htpasswd <username> <password> > htpasswd
 
-  # registry:
-  #   image: registry
-  #   container_name: registry
-  #   volumes:
-  #     - ~/docker/registry/registry:/var/lib/registry
-  #     - ~/docker/registry/auth:/auth
-  #   environment:
-  #     - REGISTRY_AUTH=htpasswd
-  #     - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
-  #     - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
-  #   restart: always
-  #   privileged: true
-  #   ports:
-  #     - 5000:5000
+# docker run --rm -ti xmartlabs/htpasswd mf Abcd12345678 > ~/docker/registry/auth/htpasswd
+
+  registry:
+    image: registry
+    container_name: registry
+    volumes:
+      - ~/docker/registry:/var/lib/registry
+      - ~/docker/registry/auth:/auth
+    environment:
+      - REGISTRY_AUTH=htpasswd
+      - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+    restart: always
+    privileged: true
+    ports:
+      - 5000:5000
