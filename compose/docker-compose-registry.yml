@@ -10,11 +10,11 @@ services:
     container_name: registry
     volumes:
       - ~/docker/registry:/var/lib/registry
-      # - ~/docker/registry/auth:/auth
+      - ~/docker/registry/auth:/auth
     environment:
       - REGISTRY_AUTH=htpasswd
       - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
-      - REGISTRY_AUTH_HTPASSWD_PATH=/var/lib/registry/auth/htpasswd
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
     restart: always
     privileged: true
     ports:
