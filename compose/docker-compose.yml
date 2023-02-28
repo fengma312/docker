@@ -9,78 +9,82 @@ services:
     volumes:
       - ~/docker/registry/registry:/var/lib/registry
       - ~/docker/registry/auth:/auth
+      - /usr/local/share/ca-certificates:/certs
     environment:
+      - REGISTRY_HTTP_ADDR=0.0.0.0:443
+      - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud_bundle.crt
+      - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
       - REGISTRY_AUTH=htpasswd
       - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
-      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd      
     restart: always
     privileged: true
     ports:
-      - 5000:5000
+      - 443:443
     # command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
-  web:
-    image: nginx
-    container_name: nginx
-    restart: always
-    ports:
-      - "8080:80"
-    volumes:
-      - ~/docker/nginx/templates:/etc/nginx/templates    
-      - ~/docker/nginx/html:/usr/share/nginx/html
-      - ~/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
-      - ~/docker/nginx/conf.d:/etc/nginx/conf.d
-      - ~/docker/nginx/logs:/var/log/nginx
-    environment:
-    - NGINX_HOST=lijuanjuan.cloud
-    - NGINX_PORT=80
-  redis:
-    image: redis
-    restart: always
-    container_name: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - ~/docker/redis/data:/data
-    environment:
-      - requirepass=mypassword
-    command: [ "redis-server", "--appendonly", "yes" ]
-  RabbitMQ:
-    image: rabbitmq:management
-    restart: always
-    container_name: mq
-    ports:
-      - 15672:15672
-      - 5672:5672
-    environment:
-      - RABBITMQ_DEFAULT_USER=mquser
-      - RABBITMQ_DEFAULT_PASS=Abcd1234
-  mysql:
-    image: mysql
-    restart: always
-    container_name: mysql
-    ports:
-      - 3306:3306
-    volumes:
-      - ~/docker/mysql:/var/lib/mysql
-    environment:
-      - TZ=Asia/Shanghai
-      - MYSQL_ROOT_PASSWORD=Abcd@123456
-  pgsql:
-    image: postgres
-    restart: always
-    container_name: gpsql
-    ports:
-      - 5432:5432
-    volumes:
-      - ~/docker/postgresql:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_PASSWORD=mypassword
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - ~/docker/mongo:/data/db
-    command: ["--auth"]
+  # web:
+  #   image: nginx
+  #   container_name: nginx
+  #   restart: always
+  #   ports:
+  #     - "8080:80"
+  #   volumes:
+  #     - ~/docker/nginx/templates:/etc/nginx/templates    
+  #     - ~/docker/nginx/html:/usr/share/nginx/html
+  #     - ~/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+  #     - ~/docker/nginx/conf.d:/etc/nginx/conf.d
+  #     - ~/docker/nginx/logs:/var/log/nginx
+  #   environment:
+  #   - NGINX_HOST=lijuanjuan.cloud
+  #   - NGINX_PORT=80
+  # redis:
+  #   image: redis
+  #   restart: always
+  #   container_name: redis
+  #   ports:
+  #     - 6379:6379
+  #   volumes:
+  #     - ~/docker/redis/data:/data
+  #   environment:
+  #     - requirepass=mypassword
+  #   command: [ "redis-server", "--appendonly", "yes" ]
+  # RabbitMQ:
+  #   image: rabbitmq:management
+  #   restart: always
+  #   container_name: mq
+  #   ports:
+  #     - 15672:15672
+  #     - 5672:5672
+  #   environment:
+  #     - RABBITMQ_DEFAULT_USER=mquser
+  #     - RABBITMQ_DEFAULT_PASS=Abcd1234
+  # mysql:
+  #   image: mysql
+  #   restart: always
+  #   container_name: mysql
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - ~/docker/mysql:/var/lib/mysql
+  #   environment:
+  #     - TZ=Asia/Shanghai
+  #     - MYSQL_ROOT_PASSWORD=Abcd@123456
+  # pgsql:
+  #   image: postgres
+  #   restart: always
+  #   container_name: gpsql
+  #   ports:
+  #     - 5432:5432
+  #   volumes:
+  #     - ~/docker/postgresql:/var/lib/postgresql/data
+  #   environment:
+  #     - POSTGRES_PASSWORD=mypassword
+  # mongo:
+  #   image: mongo
+  #   restart: always
+  #   container_name: mongo
+  #   ports:
+  #     - 27017:27017
+  #   volumes:
+  #     - ~/docker/mongo:/data/db
+  #   command: ["--auth"]
