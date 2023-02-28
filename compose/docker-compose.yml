@@ -20,6 +20,17 @@ services:
     restart: always
     ports:
       - 5000:5000
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ~/docker/redis/data:/data
+    environment:
+      - requirepass=mypassword
+    command: [ "redis-server", "--appendonly", "yes" ]
   RabbitMQ:
     image: rabbitmq:management
     restart: always
