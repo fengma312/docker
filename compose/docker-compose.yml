@@ -4,7 +4,7 @@ services:
 
 # 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd
   registry:
-    image: registry
+    image: registry:2
     container_name: registry
     volumes:
       - ~/docker/registry/registry:/var/lib/registry
@@ -16,7 +16,8 @@ services:
       - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
       - REGISTRY_AUTH=htpasswd
       - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
-      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd      
+      - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  
+      - REGISTRY_STORAGE_DELETE_ENABLED=true    
     restart: always
     privileged: true
     ports:
