@@ -1,6 +1,8 @@
 version: '3.4'
 
 services:
+
+# 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd
   registry:
     image: registry
     container_name: registry
@@ -18,6 +20,7 @@ services:
     # command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
   web:
     image: nginx
+    container_name: nginx
     restart: always
     ports:
       - "8080:80"
