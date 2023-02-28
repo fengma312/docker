@@ -4,7 +4,7 @@ services:
 
 # 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd
   registry:
-    image: registry:2
+    image: registry
     container_name: registry
     volumes:
       - ~/docker/registry/registry:/var/lib/registry
