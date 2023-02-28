@@ -11,7 +11,6 @@ services:
       - ~/docker/registry/auth:/auth
       - /usr/local/share/ca-certificates:/certs
     environment:
-      #- REGISTRY_HTTP_ADDR=0.0.0.0:2443
       - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud_bundle.crt
       - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
       - REGISTRY_AUTH=htpasswd
@@ -19,7 +18,6 @@ services:
       - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  
       - REGISTRY_STORAGE_DELETE_ENABLED=true    
     restart: always
-    privileged: true
     ports:
       - 5000:5000
     # command: ["docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd"]
