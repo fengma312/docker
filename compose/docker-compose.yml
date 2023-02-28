@@ -11,8 +11,8 @@ services:
       - ~/docker/registry/auth:/auth
       - /usr/local/share/ca-certificates:/certs
     environment:
-      - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud_bundle.crt
-      - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
+      # - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud_bundle.crt
+      # - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
       - REGISTRY_AUTH=htpasswd
       - REGISTRY_AUTH_HTPASSWD_REALM=Registry_Realm
       - REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd  
