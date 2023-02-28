@@ -9,7 +9,7 @@ services:
     volumes:
       - ~/docker/registry/registry:/var/lib/registry
       - ~/docker/registry/auth:/auth
-      - /usr/local/share/ca-certificates:/certs
+      # - /usr/local/share/ca-certificates:/certs
     environment:
       # - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud_bundle.crt
       # - REGISTRY_HTTP_TLS_KEY=/certs/lijuanjuan.cloud_other/lijuanjuan.cloud.key
