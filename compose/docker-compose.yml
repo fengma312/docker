@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
 
-# 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin 12345678 > ~/docker/registry/auth/htpasswd
+# 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin At9Ww3p4S8 > ~/docker/registry/auth/htpasswd
   registry:
     image: registry
     container_name: registry
@@ -26,7 +26,7 @@ services:
     volumes:
       - ~/docker/redis/data:/data
     environment:
-      - requirepass=mypassword
+      - requirepass=At9Ww3p4S8
     command: [ "redis-server", "--appendonly", "yes" ]
   RabbitMQ:
     image: rabbitmq:management
@@ -37,7 +37,7 @@ services:
       - 5672:5672
     environment:
       - RABBITMQ_DEFAULT_USER=mquser
-      - RABBITMQ_DEFAULT_PASS=Abcd1234
+      - RABBITMQ_DEFAULT_PASS=At9Ww3p4S8
   mysql:
     image: mysql
     restart: always
@@ -48,7 +48,7 @@ services:
       - ~/docker/mysql:/var/lib/mysql
     environment:
       - TZ=Asia/Shanghai
-      - MYSQL_ROOT_PASSWORD=Abcd@123456
+      - MYSQL_ROOT_PASSWORD=At9Ww3p4S8
   pgsql:
     image: postgres
     restart: always
@@ -58,7 +58,7 @@ services:
     volumes:
       - ~/docker/postgresql:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_PASSWORD=At9Ww3p4S8
   mongo:
     image: mongo
     restart: always
@@ -67,4 +67,7 @@ services:
       - 27017:27017
     volumes:
       - ~/docker/mongo:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: At9Ww3p4S8
     command: ["--auth"]
