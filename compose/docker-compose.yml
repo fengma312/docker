@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
 
-# 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin At9Ww3p4S8 > ~/docker/registry/auth/htpasswd
+  # 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin At9Ww3p4S8 > ~/docker/registry/auth/htpasswd
   registry:
     image: registry
     container_name: registry
@@ -17,6 +17,7 @@ services:
     restart: always
     ports:
       - 5000:5000
+
   redis:
     image: redis
     restart: always
@@ -28,6 +29,7 @@ services:
     environment:
       - requirepass=At9Ww3p4S8
     command: [ "redis-server", "--appendonly", "yes" ]
+
   RabbitMQ:
     image: rabbitmq:management
     restart: always
@@ -38,6 +40,7 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=mquser
       - RABBITMQ_DEFAULT_PASS=At9Ww3p4S8
+
   mysql:
     image: mysql
     restart: always
@@ -49,16 +52,18 @@ services:
     environment:
       - TZ=Asia/Shanghai
       - MYSQL_ROOT_PASSWORD=At9Ww3p4S8
+
   pgsql:
     image: postgres
     restart: always
-    container_name: gpsql
+    container_name: pgsql
     ports:
       - 5432:5432
     volumes:
       - ~/docker/postgresql:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=At9Ww3p4S8
+
   mongo:
     image: mongo
     restart: always
