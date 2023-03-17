@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
 
-  # 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin At9Ww3p4S8 > ~/docker/registry/auth/htpasswd
+  # 先执行 docker run --rm --entrypoint htpasswd httpd:2 -Bbn admin At9Ww3p4S8 > ~/docker/registry/auth/htpasswd 
   registry:
     image: registry
     container_name: registry
