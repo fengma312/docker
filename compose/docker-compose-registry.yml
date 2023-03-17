@@ -21,4 +21,4 @@ services:
       - 5000:5000
 
 
-# docker run --rm -ti xmartlabs/htpasswd mf Abcd12345678 > ~/docker/registry/auth/htpasswd
+# docker run --rm -ti xmartlabs/htpasswd mf Abcd1234$5678 > ~/docker/registry/auth/htpasswd

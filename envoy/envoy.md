@@ -24,3 +24,9 @@ docker run  -it --rm -v /etc/envoy/test1/envoy1.yaml:/etc/envoy/envoy1.yaml  env
 docker run  --rm -v F:\git\github\docker\envoy\envoy.yaml:/etc/envoy/envoy1.yaml  envoyproxy/envoy-alpine:v1.21-latest envoty --model validate -c /etc/envoy/envoy1.yaml
 
 docker run  -d -v F:\git\github\docker\envoy\envoy.yaml:/etc/envoy/envoy1.yaml  envoyproxy/envoy-alpine:v1.21-latest envoty -c /etc/envoy/envoy1.yaml
+
+
+###############################################################
+
+
+
