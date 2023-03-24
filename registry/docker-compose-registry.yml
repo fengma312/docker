@@ -2,9 +2,6 @@ version: '3.4'
 
 services:
  
-
-
-
   registry:
     image: registry
     container_name: registry
@@ -19,6 +16,17 @@ services:
     privileged: true
     ports:
       - 5000:5000
+
+  registry_envoy:
+    image: envoyproxy/envoy-alpine:v1.21-latest
+    container_name: registry_envoy
+    volumes:
+      - ~/docker/registry/registry_envoy.yaml:/etc/envoy/envoy.yaml
+    restart: always
+    network_mode: "services:registry"
+    depends_on:
+      - registry
+
 
 
 # docker run --rm -ti xmartlabs/htpasswd mf Abcd1234$5678 > ~/docker/registry/auth/htpasswd
