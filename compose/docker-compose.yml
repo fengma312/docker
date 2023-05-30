@@ -76,3 +76,18 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: At9Ww3p4S8
     command: ["--auth"]
+    
+  minio:
+    image: minio/minio:latest
+    restart: always
+    container_name: minio
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      - MINIO_ACCESS_KEY=adminminio
+      - MINIO_SECRET_KEY=At9Ww3p4S8
+    volumes:
+      - /docker/minio:/data
+      - /docker/minio/config:/root/.minio
+    command: ["server /data --console-address :9001"]
