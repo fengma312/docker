@@ -20,13 +20,13 @@ sudo docker run --detach \
 
 
 
-sudo docker run --d \
+sudo docker run -d \
   --hostname gitlab \
   --env GITLAB_OMNIBUS_CONFIG="external_url 'http://192.168.1.5'" \
-  --env TZ="Asia/Shanghai"
+  --env TZ="Asia/Shanghai"\
   --publish 192.168.1.5:443:443 \
   --publish 192.168.1.5:80:80 \
-  --publish 192.168.1.5:22:22 \
+  --publish 192.168.1.5:222:22 \
   --name gitlab \
   --restart always \
   --volume $GITLAB_HOME/config:/etc/gitlab \
@@ -34,3 +34,7 @@ sudo docker run --d \
   --volume $GITLAB_HOME/data:/var/opt/gitlab \
   --shm-size 256m \
   gitlab/gitlab-ce:latest
+
+
+
+  
