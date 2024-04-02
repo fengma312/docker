@@ -1,5 +1,31 @@
-https://blog.csdn.net/lianxiaohei/article/details/122665812
+https://docs.gitlab.com/ee/install/docker.html
+
+企业版本  gitlab-ee 
+开源版本 gitlab-ce  选择这个
+
+//下面命令不要改任何东西  
+
+sudo docker run --detach \
+  --hostname gitlab \
+  --env GITLAB_OMNIBUS_CONFIG="external_url 'http://192.168.1.5'" \
+  --env TZ="Asia/Shanghai"\
+  --publish 443:443 \
+  --publish 80:80 \
+  --publish 222:22 \
+  --name gitlab \
+  --restart always \
+  --volume /root/gitlab/config:/etc/gitlab \
+  --volume /root/gitlab/logs:/var/log/gitlab \
+  --volume /root/gitlab/data:/var/opt/gitlab \
+  --shm-size 256m \
+  gitlab/gitlab-ce:latest
 
 
-docker run -d -p 8443:443 -p 8090:80 -p 8022:22 --restart always --name gitlab -v /usr/local/gitlab/etc:/etc/gitlab -v /usr/local/gitlab/log:/var/log/gitlab -v /usr/local/gitlab/data:/var/opt/gitlab --privileged=true gitlab/gitlab-ce:latest
 
+
+
+
+
+
+
+  
