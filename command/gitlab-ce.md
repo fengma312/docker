@@ -20,10 +20,10 @@ sudo docker run --detach \
   --shm-size 256m \
   gitlab/gitlab-ce:latest
 
------------------------以下是安装 gitlab-runner -----------------------------------
+-----------------------以下是安装 gitlab-runner ----------------注:如果出现验证失败，在/etc/gitlab-runner/config 下增加clone_url配置项 -------------------
 https://docs.gitlab.com/runner/install/linux-manually.html
 curl -L --output /usr/bin/gitlab-runner "https://s3.dualstack.us-east-1.amazonaws.com/gitlab-runner-downloads/latest/binaries/gitlab-runner-linux-amd64"
-gitlab-runner install --user=root --working-directory=/root/gitlab-runner
+gitlab-runner install --user=root --working-directory=/root
 chmod +x /usr/bin/gitlab-runner
 gitlab-runner start
 gitlab-runner register
