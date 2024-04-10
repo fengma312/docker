@@ -1,0 +1,281 @@
+# gitlab cicd使用帮助信息
+# 服务器和服务信息 
+# ------------------------------------------------------------------------------------
+# gitlab:
+# 版本 gitlab-ce 11.3.6
+# gitlab-runner:
+# 版本 11.6.1  
+
+# 配置文件位置 /etc/gitlab-runner/config
+# 工作目录 /root/builds
+# 注:在配置文件的runners节点增加 clone_url = "https://code.pwcardid.com/" 否则无权限拉取代码, 增加 pull_policy = “if-not-present” 节点，无需重复拉取镜像
+# https://docs.gitlab.com/runner/install/linux-manually.html
+# sudo curl -L --output /usr/bin/gitlab-runner "https://gitlab-runner-downloads.s3.amazonaws.com/v11.6.1/binaries/gitlab-runner-linux-amd64"
+# sudo chmod +x /usr/bin/gitlab-runner
+# sudo mkdir -p /root/gitlab-runner
+# sudo gitlab-runner install --user=root --working-directory=/root/gitlab-runner
+# sudo gitlab-runner start
+# sudo gitlab-runner register
+# ------------------------------------------------------------------------------------
+# 服务器: spot
+# 描述:部署现货和前端
+# gitlab-runner:
+# 名称:spot,
+# 模式:共享
+# 执行器:shell
+# 数量:4
+# ------------------------------------------------------------------------------------
+# 服务器:futures
+# 描述:部署合约服务
+# gitlab-runner:
+# 名称:futures,
+# 模式:共享
+# 执行器:shell
+# 数量:0
+# ------------------------------------------------------------------------------------
+# 使用方法 
+# 在git仓库的根目录下创建 .getlab-ci.yml 配置文件,内空如下参考
+# 进入gitlab网站后(https://code.pwcardid.com/)，选择自己的项目   左则菜单->CI/CD->Pipelines  
+# 页下面可以看看历史,当前任务，手动触发任务，任务执行结果，并且在页面右上角有个Ci Lint 按键，点击进去可以校验.gitlab-ci.yml配置文件
+# ------------------------------------------------------------------------------------
+# vscode 插件(未验证)
+# 名称:GitLab Pipelines
+# 描述:可以实时查看Pipelines发布情况
+# ------------------------------------------------------------------------------------
+##############################################################################################################
+# 定义预发布环境模板
+.Staging:
+# 任务名称
+  stage: job
+# 执行器选择
+  tags:
+  - spot 
+# 是否允许任务失败 
+  allow_failure: false
+# 手动执行 如果是要git commit 执行,请注释下面这行
+  when: manual
+# 在那个git 分支执行
+  only:
+    refs:
+    - Staging
+# 定义生产环境模板
+.Production:
+  stage: job
+  tags:
+  - spot_production
+  allow_failure: false
+  when: manual
+  only:
+    refs:
+    - Production
+
+stages:
+- job
+#——————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
+#定义任务
+staging.api:
+# 继承预发布模板
+  extends: .Staging 
+# 当前任务开始前执行
+  before_script:
+# 判断docker实例是否运行，存在则停止docker实例，失败才打印提示信息
+  - docker ps -q --filter "name=com.api" | grep -q . && docker stop com.api || echo 停止实例 未找到 com.api
+# 判断docker实例是否存在，存在则删除docker实例，失败才打印提示信息
+  - docker ps -aq --filter "name=com.api" | grep -q . && docker rm com.api || echo 删除实例 未找到 com.api
+# 判断docker镜像是否存在，存在则删除docker镜像，失败才打印提示信息
+  - docker images -q --filter reference=com.api:latest | grep -q . && docker rmi com.api:latest || echo 删除镜像 未找到 com.api:latest
+# 由运行器执行的 Shell 脚本
+  script:
+# 编译dockerfile文件，生成镜像文件
+  - docker build -f ./Com.Api/Dockerfile -t com.api:latest .
+# 实例镜像文件，启动docker实例  注:-d 后台运行; --restart always 意外停止则自动启动,-p 8081:80 映射商品到宿主机上,-e TZ=Asia/Shanghai 设置docker实例时区,-e ASPNETCORE_ENVIRONMENT=Staging 设置docker实例在dotnet程序环境为预发布环境
+  - docker run -d --restart always --name com.api -p 8081:80 -e TZ=Asia/Shanghai -e ASPNETCORE_ENVIRONMENT=Staging com.api:latest 
+#——————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
+staging.openapi:
+  extends: .Staging 
+  before_script:
+  - docker ps -q --filter "name=com.openapi" | grep -q . && docker stop com.openapi || echo 停止实例 未找到 com.openapi
+  - docker ps -aq --filter "name=com.openapi" | grep -q . && docker rm com.openapi || echo 删除实例 未找到 com.openapi
+  - docker images -q --filter reference=com.openapi:latest | grep -q . && docker rmi com.openapi:latest || echo 删除镜像 未找到 com.openapi:latest
+  script:
+  - docker build -f ./Com.Openapi/Dockerfile -t com.openapi:latest .
+  - docker run -d --restart always --name com.openapi -p 8082:80 -e TZ=Asia/Shanghai -e ASPNETCORE_ENVIRONMENT=Staging com.openapi:latest 
+#——————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
+#!!!!!!!!!!!!!!!!!!!!!!!上面是预发布环境                  下面是生产环境!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+production.api:
+  extends: .Production 
+  before_script:
+  - docker ps -q --filter "name=com.api" | grep -q . && docker stop com.api || echo 停止实例 未找到 com.api
+  - docker ps -aq --filter "name=com.api" | grep -q . && docker rm com.api || echo 删除实例 未找到 com.api
+  - docker images -q --filter reference=com.api:latest | grep -q . && docker rmi com.api:latest || echo 删除镜像 未找到 com.api:latest
+  script:
+  - docker build -f ./Com.Api/Dockerfile -t com.api:latest .
+  - docker run -d --restart always --name com.api -p 8081:80 -e TZ=Asia/Shanghai -e ASPNETCORE_ENVIRONMENT=Production com.api:latest 
+#——————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
+production.openapi:
+  extends: .Production 
+  before_script:
+  - docker ps -q --filter "name=com.openapi" | grep -q . && docker stop com.openapi || echo 停止实例 未找到 com.openapi
+  - docker ps -aq --filter "name=com.openapi" | grep -q . && docker rm com.openapi || echo 删除实例 未找到 com.openapi
+  - docker images -q --filter reference=com.openapi:latest | grep -q . && docker rmi com.openapi:latest || echo 删除镜像 未找到 com.openapi:latest
+  script:
+  - docker build -f ./Com.Openapi/Dockerfile -t com.openapi:latest .
+  - docker run -d --restart always --name com.openapi -p 8082:80 -e TZ=Asia/Shanghai -e ASPNETCORE_ENVIRONMENT=Production com.openapi:latest 
+#——————————————————————————————————————————————————————————————————————————————————————————————————————————————————#
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# 管道阶段的名称和顺序 
+stages:
+- clean
+- build
+- publish
+
+# 清理任务 1
+clean_1:
+# 任务名称
+  stage: clean
+# 执行器选择
+  tags:
+    - spot
+# 是否允许任务失败 
+  allow_failure: true
+# 手动执行 如果是要git commit 执行,请注释下面这行
+  when: manual
+# 在那个git 分支执行
+  only:
+    variables:
+    - $Dev
+# 当前任务开始前执行
+  before_script:
+  - echo "正在清理1任务"
+# 由运行器执行的 Shell 脚本
+  script:
+  - docker stop $container_name_1
+  - docker rm $container_name_1
+  - docker rmi $images_name_1
+# 当前任务结束后执行
+  after_script:
+  - echo "结束清理1任务"
+#--------------------------------------------------------------------------------------------------------------#
+# 编译任务 1 
+build_1:
+# 任务名称
+  stage: build
+# 执行器选择
+  tags:
+  - spot
+#在那个git 分支执行
+  only:
+    refs:
+    - Dev
+# 是否允许任务失败
+  allow_failure: true
+# 手动执行 如果是要git commit 执行,请注释下面这行
+  when: manual
+# 当前任务开始前执行
+  before_script:
+  - echo "正在编译docker镜像:${dockrfile_path_1},镜像名:${images_name_1}"
+# 由运行器执行的 Shell 脚本
+  script:
+  - docker build -f $dockrfile_path_1 -t $images_name_1 .
+# 当前任务结束后执行
+  after_script:
+  - echo "结束编译docker镜像:${dockrfile_path_1},镜像名:${images_name_1}"
+#--------------------------------------------------------------------------------------------------------------#
+# 发布任务 1
+publish_1:
+# 任务名称
+  stage: publish
+# 执行器选择
+  tags:
+  - spot
+#在那个git 分支执行
+  only:
+    refs:
+    - Dev
+# 是否允许任务失败
+  allow_failure: false
+# 手动执行 如果是要git commit 执行,请注释下面这行
+  when: manual
+# 当前任务开始前执行
+  before_script:
+  - echo "正在发布docker镜像:${dockrfile_path_1},镜像名:${images_name_1}"
+# 由运行器执行的 Shell 脚本
+  script:
+  - docker run -d --name $container_name_1 -p 8080:80 $images_name_1
+# 当前任务结束后执行
+  after_script:
+  - echo "结束发布docker镜像:${dockrfile_path_1},镜像名:${images_name_1},容器名:${container_name_1}"
+#################################################################################################################
+#  下面是同一git仓库下另一项目发布
+stages:
+- clean
+- build
+- publish
+clean_2:
+  stage: clean
+  tags:
+  - spot
+  allow_failure: true
+  when: manual
+  only:
+    refs:
+    - Dev
+  before_script:
+  - echo "正在清理2任务"
+  script:
+  - docker stop $container_name_2
+  - docker rm $container_name_2
+  - docker rmi $images_name_2
+  after_script:
+  - echo "结束清理2任务"
+build_2:
+  stage: build
+  tags:
+  - spot
+  only:
+    refs:
+    - Dev
+  allow_failure: true
+  when: manual
+  before_script:
+  - echo "正在编译docker镜像:${dockrfile_path_2},镜像名:${images_name_2}"
+  script:
+  - docker build -f $dockrfile_path_2 -t $images_name_2 .
+  after_script:
+  - echo "结束编译docker镜像:${dockrfile_path_2},镜像名:${images_name_2}"
+publish_2:
+  stage: publish
+  tags:
+  - spot
+  only:
+    refs:
+    - Dev
+  allow_failure: false
+  when: manual
+  before_script:
+  - echo "正在编译docker镜像:${dockrfile_path_2},镜像名:${images_name_2}"
+  script:
+  - docker run -d --name $container_name_2 -p 8081:80 $images_name_2
+  after_script:
+  - echo "结束编译docker镜像:${dockrfile_path_2},镜像名:${images_name_2},容器名:${container_name_2}"
+#################################################################################################################
