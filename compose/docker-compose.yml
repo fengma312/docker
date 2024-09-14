@@ -77,25 +77,25 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: At9Ww3p4S8
     command: ["--auth"]
     
-  minio:
-    image: minio/minio:latest
-    restart: always
-    container_name: minio
-    ports:
-      - 9000:9000
-      - 9001:9001
-    environment:
-      - MINIO_ACCESS_KEY=adminminio
-      - MINIO_SECRET_KEY=At9Ww3p4S8
-    volumes:
-      - /docker/minio:/data
-      - /docker/minio/config:/root/.minio
-    command: ["server /data --console-address :9001"]
+  # minio:
+  #   image: minio/minio:latest
+  #   restart: always
+  #   container_name: minio
+  #   ports:
+  #     - 9000:9000
+  #     - 9001:9001
+  #   environment:
+  #     - MINIO_ACCESS_KEY=adminminio
+  #     - MINIO_SECRET_KEY=At9Ww3p4S8
+  #   volumes:
+  #     - /docker/minio:/data
+  #     - /docker/minio/config:/root/.minio
+  #   command: ["server /data --console-address :9001"]
 
   zookeeper:
     image: wurstmeister/zookeeper
     volumes:
-      - ./data:/data
+      -  ~/docker/zookeeper:/data
     ports:
       - 2182:2181
        
@@ -109,6 +109,6 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
     volumes:
-      - ./kafka-logs:/kafka
+      - ~/docker/kafka:/kafka
     depends_on:
       - zookeeper
