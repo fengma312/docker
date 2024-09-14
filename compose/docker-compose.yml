@@ -94,6 +94,8 @@ services:
 
   zookeeper:
     image: wurstmeister/zookeeper
+    restart: always
+    container_name: zookeeper
     volumes:
       -  ~/docker/zookeeper:/data
     ports:
@@ -101,6 +103,8 @@ services:
        
   kafka:
     image: wurstmeister/kafka
+    restart: always
+    container_name: kafka
     ports:
       - 9092:9092
     environment:
